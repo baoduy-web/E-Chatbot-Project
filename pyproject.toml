@@ -1,5 +1,5 @@
 [project]
-name = "agent-project-template"
+name = "healthcare-chatbot"
 version = "0.1.0"
 description = "Mẫu dự án AI Agent: thiết kế do người chốt, nhiều AI agent khác nhà cung cấp cùng làm không xung đột."
 requires-python = ">=3.11"

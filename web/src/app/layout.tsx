@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Agent Project Template",
+  title: "Healthcare Multi-Agent Chatbot",
   description: "Khung ứng dụng: thiết kế do người chốt, nhiều AI agent cùng làm không xung đột.",
 };
 

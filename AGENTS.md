@@ -9,7 +9,7 @@
 
 ## 0. Dự án
 
-**Agent Project Template** — mô tả sản phẩm trong 3 dòng khi khởi tạo dự án thật.
+**Healthcare Multi-Agent Chatbot** — mô tả sản phẩm trong 3 dòng khi khởi tạo dự án thật.
 Phạm vi và không-mục-tiêu: `docs/design/PRD.md`. Kiến trúc: `docs/design/ARCHITECTURE.md`.
 
 ## 1. Đọc trước khi làm — theo thứ tự

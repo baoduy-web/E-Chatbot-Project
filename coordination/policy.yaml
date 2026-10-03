@@ -85,7 +85,7 @@ protected:
       - tests/guards/
 
   - id: delivery
-    owners: [R3]  # OWNER:OPS
+    owners: [R1]  # OWNER:OPS
     why: CI và deploy là chốt chặn cuối. Đổi chúng là đổi cổng an toàn của cả hệ thống.
     paths:
       - .github/workflows/

@@ -6,14 +6,13 @@
 
 ## 1. Vai trò con người
 
-Preset team-size `standard` (4 vai trò).
+Preset team-size `solo` (1 vai trò).
 
 | Mã | Vai trò | Người | Sở hữu | Dự phòng |
 |---|---|---|---|---|
-| **R1** | Tech Lead · Architecture Owner · điều phối | `…` | `docs/design/`, `docs/rules/`, `coordination/`, `tests/guards/`, `src/agents/`, `src/llm/` | R3 |
-| **R2** | Domain & Data Owner · đánh giá | `…` | `src/domain/`, dữ liệu nghiệp vụ và nguồn, bộ đánh giá, bất biến miền | R1 |
-| **R3** | Backend & DevOps | `…` | `src/api/`, `src/db/`, `alembic/`; CI, deploy, Docker, bí mật | R1 |
-| **R4** | Frontend & Delivery | `…` | `web/`, trải nghiệm người dùng; tài liệu phát hành (README, video, pitch deck) | R3 |
+| **R1** | Người duy nhất — kiến trúc, miền, backend, frontend, vận hành | `…` | `docs/design/`, `docs/rules/`, `coordination/`, `tests/guards/`, `src/agents/`, `src/llm/`; `src/domain/`, dữ liệu nghiệp vụ và nguồn, bộ đánh giá, bất biến miền; `src/api/`, `src/db/`, `alembic/`; CI, deploy, Docker, bí mật; `web/`, trải nghiệm người dùng; tài liệu phát hành (README, video, pitch deck) | — |
+
+> Không có người thứ hai duyệt PR — bù bằng agent `reviewer` (đổi sang NHÀ CUNG CẤP KHÁC agent đã viết code) đọc diff trước khi tự duyệt: hai mô hình khác nhau ít chia sẻ cùng điểm mù. CI xanh và `check-scope` vẫn bắt buộc, vì mục đích của chúng là ngăn CHÍNH BẠN — qua nhiều phiên agent song song — giẫm chân nhau, không chỉ ngăn người khác.
 
 ## 2. AI agent trong mô hình trách nhiệm
 
@@ -31,14 +30,14 @@ Preset team-size `standard` (4 vai trò).
 
 | Hạng mục | Quyết (A) | Hỏi ý kiến (C) | Agent được |
 |---|---|---|---|
-| Kiến trúc, ranh giới lớp, ADR | R1 | R2, R3, R4 | soạn ADR `Proposed` |
-| Bất biến sản phẩm (`invariants.yaml`) | R1 + R2 | cả đội | đề xuất qua câu hỏi |
-| Ngưỡng, hệ số, nguồn số liệu nghiệp vụ | R2 | R1 | **không** — chỉ trích nguồn có sẵn |
+| Kiến trúc, ranh giới lớp, ADR | R1 | — | soạn ADR `Proposed` |
+| Bất biến sản phẩm (`invariants.yaml`) | R1 | cả đội | đề xuất qua câu hỏi |
+| Ngưỡng, hệ số, nguồn số liệu nghiệp vụ | R1 | — | **không** — chỉ trích nguồn có sẵn |
 | Ticket `ready`, phạm vi ticket | R1 | chủ module | soạn ticket `proposed` |
-| Schema CSDL, migration | R3 | R1, R2 | viết migration trong ticket có làn `db-migrations` |
-| Hợp đồng API | R3 | R4 | đổi trong ticket có làn `api-contract` |
-| CI, deploy, bí mật | R3 | R1 | đề xuất; không đổi cổng an toàn |
-| Merge vào `main` | chủ module, sau CI xanh | — | merge PR của mình **chỉ** khi governance cho phép và không chạm vùng bảo vệ |
+| Schema CSDL, migration | R1 | — | viết migration trong ticket có làn `db-migrations` |
+| Hợp đồng API | R1 | — | đổi trong ticket có làn `api-contract` |
+| CI, deploy, bí mật | R1 | — | đề xuất; không đổi cổng an toàn |
+| Merge vào `main` | chủ module, sau CI xanh | — | được, sau khi CI xanh VÀ đã tự đọc diff — không có người thứ hai (profile `solo`) |
 | Nhãn `human-approved` | chủ vùng bảo vệ | — | **không bao giờ** |
 
 Không ô nào có hai người **A**. Hạng mục hỏng thì hỏi người **A**.
@@ -48,6 +47,8 @@ Không ô nào có hai người **A**. Hạng mục hỏng thì hỏi người *
 ADR bắt buộc khi: thêm/thay framework, CSDL, nhà cung cấp mô hình, dịch vụ cloud · đổi ranh giới giữa mô
 hình ngôn ngữ và lõi tất định · đổi schema/API ảnh hưởng từ hai module · đổi luồng duyệt, phân quyền, kiểm
 toán · thêm chi phí vận hành định kỳ · chấp nhận một rủi ro an toàn/bảo mật chưa xử lý.
+
+> **Complexity `lite`:** Chỉ bắt buộc ADR khi quyết định KHÓ ĐẢO NGƯỢC (đổi CSDL, đổi nhà cung cấp mô hình, đổi ranh giới LLM↔lõi tất định). Quyết định khác ghi một dòng quyết định (`new decision`) là đủ.
 
 1. Người đề xuất (người hoặc agent `architect`) tạo `docs/design/adr/NNNN-slug.md` từ `0000-template.md`, `Status: Proposed`.
 2. R1 kiểm ít nhất hai phương án có bằng chứng; mời người hỏi ý kiến theo §3.

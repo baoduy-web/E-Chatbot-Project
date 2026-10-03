@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <main className="page">
-      <h1>Agent Project Template</h1>
+      <h1>Healthcare Multi-Agent Chatbot</h1>
       <p>Trạng thái máy chủ:</p>
       {state.kind === "loading" && <p role="status">Đang kiểm tra…</p>}
       {state.kind === "ready" && (

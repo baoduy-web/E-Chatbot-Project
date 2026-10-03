@@ -81,7 +81,7 @@
     }
   },
   "info": {
-    "title": "Agent Project Template",
+    "title": "Healthcare Multi-Agent Chatbot",
     "version": "0.1.0"
   },
   "openapi": "3.1.0",

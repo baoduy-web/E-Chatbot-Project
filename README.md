@@ -1,4 +1,4 @@
-# Agent Project Template
+# Healthcare Multi-Agent Chatbot
 
 **Mẫu dự án AI Agent để con người chốt thiết kế, còn nhiều AI agent — của nhiều nhà cung cấp khác nhau —
 cùng làm một repo mà không giẫm chân nhau và không lệch khỏi thiết kế.**

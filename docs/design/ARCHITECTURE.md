@@ -1,4 +1,4 @@
-# ARCHITECTURE — Agent Project Template
+# ARCHITECTURE — Healthcare Multi-Agent Chatbot
 
 > Vùng bảo vệ `design`. Mô tả hệ thống ĐANG chạy — luồng mới mà không có ở đây là tính năng ẩn
 > (`docs/rules/00-core.md` R00.4). Đổi kiến trúc: ADR trước, cập nhật file này trong cùng PR.
@@ -158,7 +158,6 @@ flowchart LR
     classDef owner fill:#fff3e0,stroke:#b8862c,color:#4a3607;
     classDef lane fill:#fdecea,stroke:#c1553a,color:#5b2416;
     R1(["R1"])
-    R3(["R3"])
     Z_constitution["constitution<br/>AGENTS.md · CLAUDE.md · GEMINI.md…"]
     R1 -- sở hữu --> Z_constitution
     Z_design["design<br/>docs/design/ · contracts/boundaries.yaml"]
@@ -172,7 +171,7 @@ flowchart LR
     Z_guard_nets["guard-nets<br/>(thêm được)<br/>tests/guards/"]
     R1 -- sở hữu --> Z_guard_nets
     Z_delivery["delivery<br/>.github/workflows/ · .github/CODEOWNERS · .github/pull_request_template.md…"]
-    R3 -- sở hữu --> Z_delivery
+    R1 -- sở hữu --> Z_delivery
     L_db_migrations{{"làn: db-migrations<br/>alembic/versions/"}}
     class L_db_migrations lane;
     L_python_deps{{"làn: python-deps<br/>requirements.txt · requirements-dev.txt · pyproject.toml"}}
@@ -184,7 +183,6 @@ flowchart LR
     L_web_api_core{{"làn: web-api-core<br/>web/src/lib/api/http.ts"}}
     class L_web_api_core lane;
     class R1 owner;
-    class R3 owner;
 ```
 
 Vùng bảo vệ: sửa được khi (a) PR có nhãn duyệt, (b) ticket đã duyệt khai id vùng trong `scope.protected`, hoặc (c) vùng cho `allow_additions` và thay đổi là THÊM file mới.

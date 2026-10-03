@@ -5,7 +5,7 @@
 #    Auto-Deploy → "After CI Checks Pass". Khoá bởi tests/guards/test_deploy_waits_for_ci.py.
 services:
   - type: web
-    name: agent-project-template
+    name: healthcare-chatbot
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free

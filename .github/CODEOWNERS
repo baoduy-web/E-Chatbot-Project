@@ -7,36 +7,36 @@
 # (không phải theo chủ đề) để một pattern hẹp (vd. /web/AGENTS.md) luôn đứng sau, và luôn thắng,
 # một pattern rộng hơn (vd. /web/) đứng trước nó — bất kể ai thêm mục mới vào giữa.
 
-*                                   @r1-tech-lead
+*                                   @r1-nguoi-duy
 
-/web/                                @r4-frontend-delivery
-/tools/                              @r1-tech-lead
-/.codex/                             @r1-tech-lead
-/src/db/                             @r3-backend-devops
-/src/llm/                            @r1-tech-lead
-/.cursor/                            @r1-tech-lead
-/.claude/                            @r1-tech-lead
-/.gemini/                            @r1-tech-lead
-/src/api/                            @r3-backend-devops
-/alembic/                            @r3-backend-devops
-/AGENTS.md                           @r1-tech-lead
-/CLAUDE.md                           @r1-tech-lead
-/GEMINI.md                           @r1-tech-lead
-/Dockerfile                          @r3-backend-devops
-/docs/rules/                         @r1-tech-lead
-/src/agents/                         @r1-tech-lead
-/src/domain/                         @r2-domain-data
-/render.yaml                         @r3-backend-devops
-/docs/design/                        @r1-tech-lead
-/coordination/                       @r1-tech-lead
-/tests/guards/                       @r1-tech-lead
-/web/AGENTS.md                       @r1-tech-lead @r4-frontend-delivery
-/scripts/hooks/                      @r1-tech-lead
-/scripts/githooks/                   @r1-tech-lead
-/docs/GOVERNANCE.md                  @r1-tech-lead
-/docs/work/tickets/                  @r1-tech-lead
-/.github/workflows/                  @r3-backend-devops
-/docker-compose.yml                  @r3-backend-devops
-/contracts/openapi.json              @r3-backend-devops @r4-frontend-delivery
-/contracts/boundaries.yaml           @r1-tech-lead
-/.github/copilot-instructions.md     @r1-tech-lead
+/web/                                @r1-nguoi-duy
+/tools/                              @r1-nguoi-duy
+/.codex/                             @r1-nguoi-duy
+/src/db/                             @r1-nguoi-duy
+/src/llm/                            @r1-nguoi-duy
+/.cursor/                            @r1-nguoi-duy
+/.claude/                            @r1-nguoi-duy
+/.gemini/                            @r1-nguoi-duy
+/src/api/                            @r1-nguoi-duy
+/alembic/                            @r1-nguoi-duy
+/AGENTS.md                           @r1-nguoi-duy
+/CLAUDE.md                           @r1-nguoi-duy
+/GEMINI.md                           @r1-nguoi-duy
+/Dockerfile                          @r1-nguoi-duy
+/docs/rules/                         @r1-nguoi-duy
+/src/agents/                         @r1-nguoi-duy
+/src/domain/                         @r1-nguoi-duy
+/render.yaml                         @r1-nguoi-duy
+/docs/design/                        @r1-nguoi-duy
+/coordination/                       @r1-nguoi-duy
+/tests/guards/                       @r1-nguoi-duy
+/web/AGENTS.md                       @r1-nguoi-duy
+/scripts/hooks/                      @r1-nguoi-duy
+/scripts/githooks/                   @r1-nguoi-duy
+/docs/GOVERNANCE.md                  @r1-nguoi-duy
+/docs/work/tickets/                  @r1-nguoi-duy
+/.github/workflows/                  @r1-nguoi-duy
+/docker-compose.yml                  @r1-nguoi-duy
+/contracts/openapi.json              @r1-nguoi-duy
+/contracts/boundaries.yaml           @r1-nguoi-duy
+/.github/copilot-instructions.md     @r1-nguoi-duy

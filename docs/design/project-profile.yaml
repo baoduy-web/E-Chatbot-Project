@@ -11,7 +11,7 @@
 version: 1
 
 #: Xem danh sách và pack gợi ý: python scripts/packs.py --list
-project_type: unspecified # crud-web-app | api-service | llm-app | ml-training | data-pipeline | prototype
+project_type: llm-app
 
 #: Pack đang bật. Skill lõi (packs/registry.yaml `core:`) luôn cài, không liệt kê ở đây.
-packs: []
+packs: [ai-llm]

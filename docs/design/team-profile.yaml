@@ -5,5 +5,5 @@
 # 🔒 Vùng bảo vệ `design`. Đổi team_size/complexity là quyết định của người (docs/GOVERNANCE.md §3).
 # Xem lựa chọn và ý nghĩa từng preset: docs/design/presets/README.md
 version: 1
-team_size: standard # solo | small | standard | large
-complexity: standard # lite | standard | strict
+team_size: solo # solo | small | standard | large
+complexity: lite # lite | standard | strict

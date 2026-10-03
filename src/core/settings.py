@@ -25,7 +25,7 @@ DEFAULT_CORS_ORIGIN = "http://localhost:3000"
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
-    app_name: str = "Agent Project Template"
+    app_name: str = "Healthcare Multi-Agent Chatbot"
     app_env: Literal["development", "test", "production"] = "development"
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
 

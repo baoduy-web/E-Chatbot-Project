@@ -31,7 +31,7 @@ def _tracked(rel: str) -> bool:
     KHÔNG neo root như `.cursor/` hay `.gemini/` ở BẤT KỲ độ sâu nào, khiến `git add -A` ÂM THẦM bỏ qua
     những file đó — không cảnh báo, không lỗi. File vẫn nằm nguyên trên đĩa máy đang phát triển (gitignore
     không xoá gì cả), nên `path.is_file()` vẫn xanh, còn bản thật sự đẩy lên remote thì thiếu. Đúng lỗi đã
-    xảy ra: `.cursor/rules/agents.mdc` và `.gemini/settings.json` bị nuốt khi tách `agent-project-template`
+    xảy ra: `.cursor/rules/agents.mdc` và `.gemini/settings.json` bị nuốt khi tách `healthcare-chatbot`
     ra khỏi repo cha (16/09/2026), chỉ lộ ra khi kiểm trên một bản `git clone` sạch.
     """
     result = subprocess.run(

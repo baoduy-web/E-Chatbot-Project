@@ -1,4 +1,4 @@
-# PRD — Agent Project Template
+# PRD — Healthcare Multi-Agent Chatbot
 
 > Vùng bảo vệ `design`. Đây là khung — dự án thật điền trong buổi khởi động, rồi mọi thay đổi phạm vi đi
 > qua PR có người duyệt. Agent đọc file này để biết **cái gì không được làm** chứ không chỉ cái gì cần làm.
