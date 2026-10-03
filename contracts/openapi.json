@@ -1,6 +1,356 @@
 {
   "components": {
     "schemas": {
+      "ChatMessageRequest": {
+        "properties": {
+          "message": {
+            "description": "Nội dung tin nhắn",
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "title": "Metadata",
+            "type": "object"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRole",
+            "default": "patient",
+            "description": "Vai trò: patient, doctor, nurse, admin"
+          },
+          "session_id": {
+            "default": "default_session",
+            "description": "ID phiên trò chuyện",
+            "title": "Session Id",
+            "type": "string"
+          },
+          "user_name": {
+            "default": "Người dùng",
+            "description": "Tên người dùng",
+            "title": "User Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "ChatMessageRequest",
+        "type": "object"
+      },
+      "ChatMessageResponse": {
+        "properties": {
+          "agent_name": {
+            "title": "Agent Name",
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/CitationResponse"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "medical_disclaimer": {
+            "title": "Medical Disclaimer",
+            "type": "string"
+          },
+          "red_flag": {
+            "$ref": "#/components/schemas/RedFlagAlertResponse"
+          },
+          "response": {
+            "title": "Response",
+            "type": "string"
+          },
+          "session_id": {
+            "title": "Session Id",
+            "type": "string"
+          },
+          "suggested_actions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggested Actions",
+            "type": "array"
+          },
+          "suggested_specialty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Specialty"
+          },
+          "triage_level": {
+            "$ref": "#/components/schemas/TriageLevel"
+          }
+        },
+        "required": [
+          "session_id",
+          "response",
+          "agent_name",
+          "triage_level",
+          "red_flag",
+          "medical_disclaimer"
+        ],
+        "title": "ChatMessageResponse",
+        "type": "object"
+      },
+      "CitationResponse": {
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "confidence": {
+            "title": "Confidence",
+            "type": "number"
+          },
+          "snippet": {
+            "title": "Snippet",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "url",
+          "category",
+          "snippet",
+          "confidence"
+        ],
+        "title": "CitationResponse",
+        "type": "object"
+      },
+      "DepartmentResponse": {
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "hotline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotline"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "lead": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lead"
+          },
+          "location": {
+            "title": "Location",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "services": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Services",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "category",
+          "location",
+          "description"
+        ],
+        "title": "DepartmentResponse",
+        "type": "object"
+      },
+      "DrugInteractionItemDTO": {
+        "properties": {
+          "clinical_consequence": {
+            "title": "Clinical Consequence",
+            "type": "string"
+          },
+          "drug_pair": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Drug Pair",
+            "type": "array"
+          },
+          "mechanism": {
+            "title": "Mechanism",
+            "type": "string"
+          },
+          "recommendation": {
+            "title": "Recommendation",
+            "type": "string"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "drug_pair",
+          "severity",
+          "mechanism",
+          "clinical_consequence",
+          "recommendation"
+        ],
+        "title": "DrugInteractionItemDTO",
+        "type": "object"
+      },
+      "DrugInteractionRequest": {
+        "properties": {
+          "drugs": {
+            "description": "Danh sách tối thiểu 2 tên thuốc/hoạt chất cần kiểm tra",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "title": "Drugs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "drugs"
+        ],
+        "title": "DrugInteractionRequest",
+        "type": "object"
+      },
+      "DrugInteractionResponse": {
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "has_contraindication": {
+            "title": "Has Contraindication",
+            "type": "boolean"
+          },
+          "interactions": {
+            "items": {
+              "$ref": "#/components/schemas/DrugInteractionItemDTO"
+            },
+            "title": "Interactions",
+            "type": "array"
+          },
+          "medical_disclaimer": {
+            "title": "Medical Disclaimer",
+            "type": "string"
+          },
+          "suggested_actions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggested Actions",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "has_contraindication",
+          "summary",
+          "interactions",
+          "medical_disclaimer"
+        ],
+        "title": "DrugInteractionResponse",
+        "type": "object"
+      },
+      "EstimateRequest": {
+        "properties": {
+          "exam_type": {
+            "default": "Khám Bảo hiểm Y tế (BHYT)",
+            "description": "Hình thức khám",
+            "title": "Exam Type",
+            "type": "string"
+          },
+          "is_bhyt": {
+            "default": true,
+            "description": "Có sử dụng thẻ BHYT hay không",
+            "title": "Is Bhyt",
+            "type": "boolean"
+          },
+          "services": {
+            "description": "Danh sách tên các xét nghiệm/chụp chiếu cần làm",
+            "items": {
+              "type": "string"
+            },
+            "title": "Services",
+            "type": "array"
+          }
+        },
+        "title": "EstimateRequest",
+        "type": "object"
+      },
+      "EstimateResponse": {
+        "properties": {
+          "examination_fee": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Examination Fee",
+            "type": "string"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "services": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Services",
+            "type": "array"
+          },
+          "total_estimated": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Total Estimated",
+            "type": "string"
+          }
+        },
+        "required": [
+          "examination_fee",
+          "services",
+          "total_estimated",
+          "note"
+        ],
+        "title": "EstimateResponse",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -31,6 +381,279 @@
         ],
         "title": "MeResponse",
         "type": "object"
+      },
+      "RedFlagAlertResponse": {
+        "properties": {
+          "emergency_guidance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergency Guidance"
+          },
+          "hotline": {
+            "default": "115",
+            "title": "Hotline",
+            "type": "string"
+          },
+          "is_triggered": {
+            "title": "Is Triggered",
+            "type": "boolean"
+          },
+          "nearest_emergency": {
+            "default": "Khoa Cấp cứu 24/7 - Nhà C Bệnh viện E",
+            "title": "Nearest Emergency",
+            "type": "string"
+          },
+          "symptoms_detected": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Symptoms Detected",
+            "type": "array"
+          }
+        },
+        "required": [
+          "is_triggered"
+        ],
+        "title": "RedFlagAlertResponse",
+        "type": "object"
+      },
+      "SOAPAssessmentDTO": {
+        "properties": {
+          "clinical_reasoning": {
+            "title": "Clinical Reasoning",
+            "type": "string"
+          },
+          "differential_diagnoses": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Differential Diagnoses",
+            "type": "array"
+          },
+          "icd10_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Icd10 Code"
+          },
+          "primary_diagnosis": {
+            "title": "Primary Diagnosis",
+            "type": "string"
+          }
+        },
+        "required": [
+          "primary_diagnosis",
+          "clinical_reasoning"
+        ],
+        "title": "SOAPAssessmentDTO",
+        "type": "object"
+      },
+      "SOAPGenerateRequest": {
+        "properties": {
+          "doctor_id": {
+            "default": "DOC-E01",
+            "description": "Mã bác sĩ khám",
+            "title": "Doctor Id",
+            "type": "string"
+          },
+          "doctor_name": {
+            "default": "Bác sĩ lâm sàng Bệnh viện E",
+            "description": "Tên bác sĩ",
+            "title": "Doctor Name",
+            "type": "string"
+          },
+          "history_text": {
+            "description": "Lời khai bệnh nhân / bệnh sử tóm tắt",
+            "minLength": 5,
+            "title": "History Text",
+            "type": "string"
+          },
+          "patient_id": {
+            "description": "Mã bệnh nhân hoặc mã hồ sơ",
+            "title": "Patient Id",
+            "type": "string"
+          },
+          "patient_name": {
+            "description": "Họ và tên bệnh nhân",
+            "title": "Patient Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "patient_id",
+          "patient_name",
+          "history_text"
+        ],
+        "title": "SOAPGenerateRequest",
+        "type": "object"
+      },
+      "SOAPNoteResponse": {
+        "properties": {
+          "assessment": {
+            "$ref": "#/components/schemas/SOAPAssessmentDTO"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "doctor_id": {
+            "title": "Doctor Id",
+            "type": "string"
+          },
+          "medical_disclaimer": {
+            "title": "Medical Disclaimer",
+            "type": "string"
+          },
+          "objective": {
+            "$ref": "#/components/schemas/SOAPObjectiveDTO"
+          },
+          "patient_id": {
+            "title": "Patient Id",
+            "type": "string"
+          },
+          "patient_name": {
+            "title": "Patient Name",
+            "type": "string"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/SOAPPlanDTO"
+          },
+          "subjective": {
+            "$ref": "#/components/schemas/SOAPSubjectiveDTO"
+          },
+          "suggested_actions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggested Actions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "content",
+          "patient_id",
+          "patient_name",
+          "doctor_id",
+          "subjective",
+          "objective",
+          "assessment",
+          "plan",
+          "medical_disclaimer"
+        ],
+        "title": "SOAPNoteResponse",
+        "type": "object"
+      },
+      "SOAPObjectiveDTO": {
+        "properties": {
+          "lab_results": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Lab Results",
+            "type": "array"
+          },
+          "physical_exam": {
+            "title": "Physical Exam",
+            "type": "string"
+          },
+          "vital_signs": {
+            "additionalProperties": true,
+            "title": "Vital Signs",
+            "type": "object"
+          }
+        },
+        "required": [
+          "physical_exam"
+        ],
+        "title": "SOAPObjectiveDTO",
+        "type": "object"
+      },
+      "SOAPPlanDTO": {
+        "properties": {
+          "diagnostic_tests": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Diagnostic Tests",
+            "type": "array"
+          },
+          "follow_up": {
+            "title": "Follow Up",
+            "type": "string"
+          },
+          "patient_education": {
+            "title": "Patient Education",
+            "type": "string"
+          },
+          "prescriptions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prescriptions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "patient_education",
+          "follow_up"
+        ],
+        "title": "SOAPPlanDTO",
+        "type": "object"
+      },
+      "SOAPSubjectiveDTO": {
+        "properties": {
+          "chief_complaint": {
+            "title": "Chief Complaint",
+            "type": "string"
+          },
+          "history_of_present_illness": {
+            "title": "History Of Present Illness",
+            "type": "string"
+          },
+          "past_medical_history": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Past Medical History",
+            "type": "array"
+          }
+        },
+        "required": [
+          "chief_complaint",
+          "history_of_present_illness"
+        ],
+        "title": "SOAPSubjectiveDTO",
+        "type": "object"
+      },
+      "TriageLevel": {
+        "enum": [
+          "emergency",
+          "urgent",
+          "routine"
+        ],
+        "title": "TriageLevel",
+        "type": "string"
+      },
+      "UserRole": {
+        "enum": [
+          "patient",
+          "doctor",
+          "nurse",
+          "admin"
+        ],
+        "title": "UserRole",
+        "type": "string"
       },
       "ValidationError": {
         "properties": {
@@ -71,6 +694,65 @@
         ],
         "title": "ValidationError",
         "type": "object"
+      },
+      "WorkflowResponse": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "location": {
+            "title": "Location",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/WorkflowStepResponse"
+            },
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "location",
+          "steps"
+        ],
+        "title": "WorkflowResponse",
+        "type": "object"
+      },
+      "WorkflowStepResponse": {
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "location": {
+            "title": "Location",
+            "type": "string"
+          },
+          "step_number": {
+            "title": "Step Number",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "step_number",
+          "title",
+          "detail",
+          "location"
+        ],
+        "title": "WorkflowStepResponse",
+        "type": "object"
       }
     },
     "securitySchemes": {
@@ -86,6 +768,243 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/chat/message": {
+      "post": {
+        "description": "Tiếp nhận tin nhắn, kiểm tra Red Flags cấp cứu, che PII và định tuyến tới Agent chuyên trách.",
+        "operationId": "handle_chat_message_api_v1_chat_message_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatMessageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Handle Chat Message",
+        "tags": [
+          "Chat Multi-Agent"
+        ]
+      }
+    },
+    "/api/v1/doctor/drug-interactions": {
+      "post": {
+        "description": "Rà soát tương tác thuốc nguy cơ cao theo Dược thư Quốc gia Việt Nam.",
+        "operationId": "check_drug_interactions_api_v1_doctor_drug_interactions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DrugInteractionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DrugInteractionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Check Drug Interactions",
+        "tags": [
+          "Lâm sàng Bác sĩ"
+        ]
+      }
+    },
+    "/api/v1/doctor/soap-note": {
+      "post": {
+        "description": "Tự động sinh cấu trúc bệnh án SOAP Note và khuyến nghị cận lâm sàng theo phác đồ.",
+        "operationId": "generate_soap_note_api_v1_doctor_soap_note_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SOAPGenerateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SOAPNoteResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Generate Soap Note",
+        "tags": [
+          "Lâm sàng Bác sĩ"
+        ]
+      }
+    },
+    "/api/v1/hospital/departments": {
+      "get": {
+        "description": "Lấy danh sách các trung tâm, khoa phòng tại Bệnh viện E.",
+        "operationId": "get_departments_api_v1_hospital_departments_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/DepartmentResponse"
+                  },
+                  "title": "Response Get Departments Api V1 Hospital Departments Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Departments",
+        "tags": [
+          "Bệnh viện E Tri thức"
+        ]
+      }
+    },
+    "/api/v1/hospital/estimate": {
+      "post": {
+        "description": "Ước tính chi phí khám và cận lâm sàng theo bảng giá Bệnh viện E.",
+        "operationId": "estimate_cost_api_v1_hospital_estimate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstimateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstimateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Estimate Cost",
+        "tags": [
+          "Bệnh viện E Tri thức"
+        ]
+      }
+    },
+    "/api/v1/hospital/workflows/{code}": {
+      "get": {
+        "description": "Lấy chi tiết quy trình khám bệnh (bhyt, on_demand, emergency).",
+        "operationId": "get_workflow_api_v1_hospital_workflows__code__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "title": "Code",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Workflow",
+        "tags": [
+          "Bệnh viện E Tri thức"
+        ]
+      }
+    },
     "/api/v1/me": {
       "get": {
         "operationId": "me_api_v1_me_get",
