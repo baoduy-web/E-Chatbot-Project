@@ -1,0 +1,39 @@
+# Ranh giới lớp của `src/` — THIẾT KẾ DẠNG CHẠY ĐƯỢC.
+# Lưới canh: tests/guards/test_import_boundaries.py (đỏ khi có import sai chiều).
+# 🔒 Vùng bảo vệ `design`: đổi file này là đổi kiến trúc — cần ADR và người duyệt.
+#
+# Mỗi module trong src/ thuộc ĐÚNG MỘT lớp (khớp tiền tố gói dài nhất). Một lớp luôn được import chính
+# nó. Thêm gói cấp cao mới mà không khai ở đây thì lưới đỏ — cố ý: gói mới là quyết định kiến trúc.
+version: 1
+
+layers:
+  app:
+    packages: [src.main]
+    may_import: [core, api, db, domain, agents, llm]
+  core:
+    packages: [src.core]
+    may_import: []
+  domain:
+    packages: [src.domain]
+    may_import: []
+  db:
+    packages: [src.db]
+    may_import: [core, domain]
+  llm:
+    packages: [src.llm]
+    may_import: [core]
+  agents:
+    packages: [src.agents]
+    may_import: [core, domain, llm]
+  api:
+    packages: [src.api]
+    may_import: [core, db, domain, agents]
+
+third_party:
+  # Lõi tất định không biết tới mạng, CSDL, framework web hay mô hình ngôn ngữ.
+  forbidden:
+    domain: [fastapi, starlette, sqlalchemy, alembic, httpx, requests, aiohttp, openai, anthropic, google, langchain, langchain_core, langgraph, litellm, mistralai, cohere, groq]
+    core: [openai, anthropic, google.genai, google.generativeai, langchain, langchain_core, langgraph, litellm]
+  # SDK nhà cung cấp LLM chỉ được import trong các lớp này — đổi nhà cung cấp chỉ chạm một chỗ.
+  llm_sdks: [openai, anthropic, google.genai, google.generativeai, langchain_openai, langchain_anthropic, langchain_google_genai, litellm, mistralai, cohere, groq]
+  llm_sdks_allowed_in: [llm]

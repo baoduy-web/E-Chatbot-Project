@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Bí mật — chặn cả họ tên, không chỉ `.env`: bản sao lưu khi xoay khoá chứa khoá thật y hệt.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dữ liệu cục bộ, CSDL, sao lưu (có thể chứa dữ liệu người dùng)
+data/
+*.db
+*.sqlite3
+backups/
+
+# Worktree của agent (agentctl start)
+.worktrees/
+
+# Frontend
+node_modules/
+.next/
+out/
+web/playwright-report/
+web/test-results/
+*.tsbuildinfo
+next-env.d.ts
+
+# Nhật ký/bộ nhớ cục bộ của công cụ AI — không phải nội dung dự án
+.claude/settings.local.json
+.claude/worktrees/
+.gemini/*
+!.gemini/settings.json
+.codex/*
+!.codex/hooks.json
+
+# Hệ điều hành / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
