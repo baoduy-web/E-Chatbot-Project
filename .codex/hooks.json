@@ -1,0 +1,17 @@
+{
+  "description": "Chặn ghi vào vùng bảo vệ hoặc ngoài phạm vi ticket — cùng logic với pre-commit và CI.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'root=\"$(git rev-parse --show-toplevel)\" && bash \"$root/scripts/_pyrun.sh\" \"$root/scripts/hooks/guard_write.py\"'",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  }
+}
