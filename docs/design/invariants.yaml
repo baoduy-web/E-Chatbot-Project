@@ -1,0 +1,228 @@
+# Bất biến của hệ thống — lời hứa mà KHÔNG agent hay người nào được phá lặng lẽ.
+# 🔒 Vùng bảo vệ `design`. Thêm/sửa bất biến = quyết định của người (docs/GOVERNANCE.md §3).
+# Mỗi bất biến `automated` trỏ tới lưới canh THẬT (`đường/dẫn.py::tên_test` hoặc file workflow);
+# tests/guards/test_invariants_registry.py đỏ nếu trỏ vào khoảng không, hoặc nếu có lưới canh mồ côi.
+# Bất biến miền của dự án: thêm với mã INV-D01, INV-D02... (xem docs/rules/10-domain-safety.md).
+version: 1
+
+invariants:
+  - id: INV-001
+    title: Thiết kế và kế hoạch do người chốt không bị agent sửa lặng lẽ
+    severity: critical
+    owner: R1
+    statement: >-
+      Thay đổi trong vùng bảo vệ (thiết kế, luật, điều phối, lưới canh cũ, kế hoạch, CI/deploy) chỉ merge được khi
+      có nhãn duyệt của người hoặc ticket đã duyệt trước vùng đó; phạm vi và chính sách luôn đọc từ nhánh gốc.
+    enforcement: automated
+    enforced_by:
+      - tests/tools/test_scope.py::test_them_luoi_canh_moi_duoc_sua_luoi_cu_can_duyet
+      - tests/tools/test_scope.py::test_cli_doc_ticket_tu_base_nen_nhanh_tu_noi_scope_van_bi_bat
+      - tests/tools/test_guard_write_hook.py::test_nhanh_ticket_chan_ngoai_scope_va_vung_bao_ve
+      - tests/guards/test_scope_guard_workflow.py::test_scope_guard_chay_cong_cu_tu_commit_goc
+      - .github/workflows/scope-guard.yml
+
+  - id: INV-002
+    title: Không hai claim còn hạn chồng phạm vi hay giữ cùng làn độc quyền
+    severity: critical
+    owner: R1
+    statement: >-
+      Claim được ghi nguyên tử; claim mới bị từ chối nếu phạm vi (kể cả đường dẫn của làn/vùng) có thể chồng một
+      claim còn hạn; ghi đồng thời thì quyết định lại trên sổ mới nhất.
+    enforcement: automated
+    enforced_by:
+      - tests/tools/test_claims.py::test_hai_agent_khong_giu_duoc_hai_pham_vi_chong_nhau
+      - tests/tools/test_claims.py::test_lan_doc_quyen_chi_mot_ticket_giu
+      - tests/tools/test_claims.py::test_ghi_dong_thoi_bi_tu_choi_roi_quyet_dinh_lai_tren_so_moi
+      - tests/tools/test_claims.py::test_sua_ticket_cuc_bo_khong_noi_duoc_pham_vi
+      - tests/tools/test_globs.py::test_may_overlap_khong_bao_gio_bo_sot_chong_that
+
+  - id: INV-003
+    title: Mọi AI agent đọc cùng một bộ luật, và bộ luật không trỏ vào khoảng không
+    severity: high
+    owner: R1
+    statement: >-
+      AGENTS.md là nguồn luật duy nhất; adapter của từng công cụ chỉ trỏ về đó; vai trò agent định nghĩa một nơi;
+      hook không phụ thuộc thư mục làm việc; tài liệu agent đọc không chứa đường dẫn chết.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_agent_instructions.py::test_adapter_chi_tro_ve_agents_md
+      - tests/guards/test_agent_instructions.py::test_vai_tro_agent_chi_dinh_nghia_mot_noi
+      - tests/guards/test_agent_instructions.py::test_lenh_hook_khong_phu_thuoc_thu_muc_lam_viec
+      - tests/guards/test_doc_references.py::test_khong_tro_toi_duong_dan_chet
+
+  - id: INV-004
+    title: Lõi tất định không import LLM, web, ORM; SDK nhà cung cấp LLM chỉ ở src/llm
+    severity: critical
+    owner: R1
+    statement: Import giữa các lớp của src/ chỉ theo chiều khai trong contracts/boundaries.yaml.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_import_boundaries.py::test_moi_module_ton_trong_ranh_gioi_lop
+      - tests/guards/test_import_boundaries.py::test_bo_do_bat_duoc_vi_pham_that
+
+  - id: INV-005
+    title: Mô hình ngôn ngữ chỉ chọn; mọi con số do code tính và có nguồn
+    severity: critical
+    owner: R2
+    statement: >-
+      Schema đầu ra của mô hình không có trường con số nghiệp vụ; con số tính từ dữ liệu có source/source_ref; mã
+      không xác định bị từ chối thay vì đoán; injection không đổi được con số.
+    enforcement: automated
+    enforced_by:
+      - tests/unit/test_llm_boundary.py::test_schema_mo_hinh_khong_co_truong_tien
+      - tests/unit/test_llm_boundary.py::test_tong_tien_do_code_tinh_tu_danh_muc_co_nguon
+      - tests/unit/test_llm_boundary.py::test_injection_doi_duoc_lua_chon_nhung_khong_doi_duoc_tien
+      - tests/unit/test_llm_boundary.py::test_ma_ngoai_danh_muc_bi_tu_choi_khong_doan
+
+  - id: INV-006
+    title: Hành động rủi ro cao cần vai trò người duyệt; hành động chưa khai coi là rủi ro cao
+    severity: critical
+    owner: R1
+    statement: Mọi hành động HIGH khai vai trò duyệt; require_approval từ chối vai trò khác và hành động chưa khai.
+    enforcement: automated
+    enforced_by:
+      - tests/unit/test_llm_boundary.py::test_hanh_dong_chua_khai_bao_la_rui_ro_cao_va_high_phai_co_nguoi_duyet
+      - tests/unit/test_api.py::test_require_role_chan_sai_vai_tro
+
+  - id: INV-007
+    title: Bí mật và dữ liệu định danh không rời hệ thống, không nằm trong repo
+    severity: critical
+    owner: R3
+    statement: >-
+      Văn bản gửi ra ngoài qua egress guard (chặn, không lặp lại giá trị); file cấu hình được commit chỉ tham chiếu
+      biến môi trường; repo không chứa .env, khoá, file CSDL; lỗi hạ tầng không lộ chi tiết driver.
+    enforcement: automated
+    enforced_by:
+      - tests/unit/test_llm_boundary.py::test_egress_chan_va_khong_lap_lai_gia_tri
+      - tests/guards/test_mcp_no_secrets.py::test_mcp_json_khong_chua_bi_mat_tho
+      - tests/guards/test_repo_hygiene.py::test_repo_sach
+      - tests/unit/test_api.py::test_ready_tra_503_co_the_thu_lai_khi_csdl_mat_ket_noi
+
+  - id: INV-008
+    title: Schema chỉ đổi qua migration; đồ thị migration đúng một head
+    severity: critical
+    owner: R3
+    statement: >-
+      Mọi bảng/cột trong model được migration dựng ra (kiểm trên SQLite ở test, trên PostgreSQL ở CI); đồ thị có
+      đúng một head, không revision mồ côi; alembic.ini đọc được trên mọi hệ điều hành.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_migrations.py::test_dung_mot_head
+      - tests/guards/test_migrations.py::test_khong_revision_mo_coi
+      - tests/guards/test_migrations.py::test_upgrade_head_tren_sqlite_dung_du_moi_bang_va_cot
+      - tests/guards/test_migrations.py::test_alembic_ini_chi_chua_ascii
+      - .github/workflows/ci.yml
+
+  - id: INV-009
+    title: Production không khởi động với cấu hình mặc định nguy hiểm
+    severity: critical
+    owner: R3
+    statement: APP_ENV=production mà khoá JWT mặc định/ngắn, SQLite, CORS mặc định hoặc regex quá rộng thì dịch vụ không lên.
+    enforcement: automated
+    enforced_by:
+      - tests/unit/test_production_gate.py::test_mac_dinh_dev_bi_chan_va_bao_du_moi_loi_mot_lan
+      - tests/unit/test_production_gate.py::test_regex_cors_qua_rong_bi_chan
+
+  - id: INV-010
+    title: Deploy chỉ sau khi mọi check CI qua
+    severity: critical
+    owner: R3
+    statement: >-
+      Render chờ check; không job bị bỏ qua trên main; không job needs job khác; không bước nào biến đỏ thành xanh;
+      tên job khớp cổng Vercel.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_deploy_waits_for_ci.py::test_render_chi_deploy_khi_ci_qua
+      - tests/guards/test_deploy_waits_for_ci.py::test_khong_job_nao_bo_qua_duoc_lan_day_vao_main
+      - tests/guards/test_deploy_waits_for_ci.py::test_khong_job_nao_needs_job_khac
+      - tests/guards/test_deploy_waits_for_ci.py::test_khong_buoc_nao_bien_do_thanh_xanh
+      - tests/guards/test_deploy_waits_for_ci.py::test_ten_job_khop_cong_deploy_cua_vercel
+
+  - id: INV-011
+    title: Kiểm cục bộ phản chiếu CI
+    severity: high
+    owner: R3
+    statement: Mọi lệnh CI có trong scripts/ci_local.py hoặc được miễn có lý do; script chạy UTC và kiểm cây git sạch.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_ci_local_mirror.py::test_script_phu_moi_lenh_cua_ci
+      - tests/guards/test_ci_local_mirror.py::test_script_chay_duoi_utc_va_kiem_cay_git_sach
+
+  - id: INV-012
+    title: Hợp đồng API đổi thì hiện trong diff
+    severity: high
+    owner: R3
+    statement: contracts/openapi.json khớp ứng dụng; đổi hợp đồng đi qua làn độc quyền api-contract.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_openapi_contract.py::test_ban_chup_hop_dong_khop_ung_dung
+
+  - id: INV-013
+    title: Mục công việc đúng cấu trúc; vùng bảo vệ và làn không rỗng
+    severity: high
+    owner: R1
+    statement: >-
+      Ticket/câu hỏi/quyết định/sự cố/nhật ký parse được, mã duy nhất, trạng thái không ghi tay; mỗi đường dẫn trong
+      vùng bảo vệ và làn độc quyền tồn tại thật.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_work_items.py::test_moi_muc_cong_viec_dung_cau_truc
+      - tests/guards/test_work_items.py::test_vung_bao_ve_va_lan_doc_quyen_tro_toi_thu_co_that
+      - tests/tools/test_entries_and_commits.py::test_hai_agent_ghi_cung_tieu_de_ra_hai_file_khac_nhau
+
+  - id: INV-014
+    title: Mỗi bất biến tự động có lưới canh tồn tại thật, và mỗi lưới canh có lý do tồn tại
+    severity: high
+    owner: R1
+    statement: Sổ đăng ký này không trỏ vào test không tồn tại, và không file lưới canh nào mồ côi.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_invariants_registry.py::test_moi_bat_bien_tro_toi_luoi_canh_ton_tai
+      - tests/guards/test_invariants_registry.py::test_moi_file_luoi_canh_duoc_mot_bat_bien_nhan
+
+  - id: INV-015
+    title: Vai trò/CODEOWNERS/chủ vùng bảo vệ sinh ra từ team-profile.yaml, không rời tay
+    severity: high
+    owner: R1
+    statement: >-
+      docs/GOVERNANCE.md, .github/CODEOWNERS, và owners: trong coordination/policy.yaml khớp hoàn toàn
+      với docs/design/team-profile.yaml; mọi tổ hợp team-size × complexity tương thích dựng được, tổ hợp
+      không đủ người cho mức duyệt yêu cầu bị từ chối rõ ràng; CODEOWNERS sắp theo độ dài mẫu tăng dần để
+      pattern cụ thể luôn thắng pattern rộng.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_team_profile.py::test_ba_file_khop_team_profile_dang_ap_dung
+      - tests/guards/test_team_profile.py::test_moi_to_hop_tuong_thich_dung_duoc
+      - tests/guards/test_team_profile.py::test_to_hop_khong_du_nguoi_bi_tu_choi_ro_rang
+      - tests/guards/test_team_profile.py::test_pattern_cu_the_luon_dung_sau_pattern_rong_chua_no
+      - tests/guards/test_team_profile.py::test_web_agents_md_thang_web
+
+  - id: INV-016
+    title: Tài liệu kiến trúc không rời nguồn sự thật máy đọc được
+    severity: high
+    owner: R1
+    statement: >-
+      Mọi vùng GENERATED: trong docs/design/ARCHITECTURE.md khớp thứ sinh ra từ contracts/boundaries.yaml
+      và coordination/policy.yaml; mọi lớp khai trong hợp đồng đều xuất hiện trong tài liệu; hai sơ đồ do
+      NGƯỜI vẽ (bối cảnh, luồng găng) còn nguyên vì bộ sinh không dựng lại được chúng.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_diagrams_dong_bo.py::test_vung_sinh_ra_khop_nguon_su_that
+      - tests/guards/test_diagrams_dong_bo.py::test_moi_lop_trong_hop_dong_deu_co_trong_tai_lieu
+      - tests/guards/test_diagrams_dong_bo.py::test_so_do_nguoi_ve_con_nguyen
+      - tests/guards/test_diagrams_dong_bo.py::test_bo_sinh_doc_nguon_that_khong_tra_van_ban_hang
+
+  - id: INV-017
+    title: Bộ kỹ năng đã cài khớp hồ sơ dự án, không có skill mồ côi
+    severity: medium
+    owner: R1
+    statement: >-
+      .claude/skills/ chứa đúng skill lõi cộng skill của các pack đang bật trong docs/design/project-profile.yaml;
+      mọi skill có frontmatter hợp lệ với name trùng tên thư mục và description nói rõ DÙNG KHI NÀO.
+      Skill mồ côi là thuế ngữ cảnh vĩnh viễn ở mọi phiên của mọi agent mà không ai cố ý trả.
+    enforcement: automated
+    enforced_by:
+      - tests/guards/test_packs.py::test_skill_da_cai_khop_profile
+      - tests/guards/test_packs.py::test_moi_skill_co_frontmatter_hop_le
+      - tests/guards/test_packs.py::test_so_dang_ky_tu_nhat_quan
+      - tests/guards/test_packs.py::test_cai_va_go_that_su_chep_va_xoa_file
