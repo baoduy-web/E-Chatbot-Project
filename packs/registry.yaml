@@ -1,0 +1,110 @@
+# Sổ đăng ký kỹ năng (skill) của template.
+#
+# 🔒 Vùng bảo vệ `design`: bật thêm một pack là đổi cách cả đội làm việc — cần người duyệt.
+#
+# VÌ SAO CHIA PACK thay vì cài hết: mô tả của MỌI skill được nạp vào ngữ cảnh ở MỌI phiên. Một template
+# 25 skill đánh thuế vĩnh viễn lên cả dự án CRUD không bao giờ đụng tới RAG hay finetune. Lõi luôn bật vì
+# nó là cách template này vận hành; phần còn lại bật theo loại dự án.
+#
+# Quy trình: `python scripts/packs.py --list` · `--install <pack>` · `--check` (CI).
+# Thêm pack mới hoặc viết nội dung cho pack `planned`: đọc packs/README.md.
+version: 1
+
+#: Luôn cài, mọi dự án. Đây là cách template vận hành, không phải tuỳ chọn.
+core:
+  - guard-net
+  - diagram
+  - adr
+  - ticket-flow
+  - multi-agent
+
+#: `status: ready` = có nội dung trong packs/<tên>/skills/, cài được.
+#: `status: planned` = đã chốt phạm vi, CHƯA có nội dung. `--install` sẽ từ chối và nói rõ.
+#: Viết pack khi có dự án thật dùng nó — pack viết trước khi có người dùng sẽ thành tài liệu chết.
+packs:
+  backend:
+    label: Backend / API
+    status: planned
+    suits: [api-service, crud-web-app, llm-app, data-pipeline]
+    skills:
+      - name: api-contract
+        summary: Đổi API ⇒ sinh lại openapi.json, phát hiện thay đổi phá vỡ tương thích trước khi merge.
+      - name: db-migration
+        summary: Đổi schema ⇒ migration cùng PR, giữ một head, kiểm model khớp migration trên Postgres thật.
+      - name: observability
+        summary: Log có cấu trúc, trace id xuyên request, phân loại lỗi retryable/không.
+
+  frontend:
+    label: Frontend / UI
+    status: planned
+    suits: [crud-web-app, llm-app]
+    skills:
+      - name: ui-component
+        summary: Dựng component kèm trạng thái rỗng/đang tải/lỗi, a11y bàn phím, và ngưỡng responsive thật.
+      - name: design-system
+        summary: Token ba tầng (primitive → semantic → component); cấm màu/cỡ viết thẳng trong component.
+      - name: ux-prototype
+        summary: Dựng bản mẫu nhanh để chốt luồng với người thật TRƯỚC khi viết code thật.
+
+  data:
+    label: Dữ liệu
+    status: planned
+    suits: [data-pipeline, llm-app, ml-training, crud-web-app]
+    skills:
+      - name: data-ingest
+        summary: Nạp dữ liệu có provenance bắt buộc, mặc định chạy thử (dry-run), ghi lại được nhiều lần.
+      - name: data-quality
+        summary: Kiểm toàn vẹn, phân phối, null/outlier, và trôi dữ liệu giữa hai lần nạp.
+      - name: sql-perf
+        summary: Đọc EXPLAIN, đặt index theo truy vấn thật, bắt N+1.
+
+  ai-llm:
+    label: Ứng dụng LLM
+    status: ready
+    suits: [llm-app]
+    skills:
+      - name: prompt-io
+        summary: Structured output schema hẹp, extra="forbid", retry có giới hạn; mô hình chọn, code tính.
+      - name: rag
+        summary: Chia đoạn, embedding, đo truy hồi (recall@k, MRR) TRƯỚC khi chỉnh prompt, rerank, ngưỡng từ chối.
+      - name: eval-harness
+        summary: Golden set, eval offline, LLM-judge kèm phép kiểm chính con judge, cổng hồi quy trong CI.
+      - name: token-economics
+        summary: Đếm token từ `usage` thật; tách input/output/cache; quy về $/đơn-vị-công-việc để so giữa các phiên.
+      - name: latency-slo
+        summary: P50/P95/P99 tính từ mẫu thô; TTFT khác tổng thời gian; cold start báo riêng; nêu rõ tải đồng thời.
+
+  ml-dl:
+    label: Huấn luyện ML/DL
+    status: planned
+    suits: [ml-training]
+    skills:
+      - name: experiment-tracking
+        summary: Seed, config, phiên bản dữ liệu — một lần chạy phải dựng lại được từ bản ghi.
+      - name: train-eval
+        summary: Chia tập đúng, bắt rò rỉ nhãn, luôn có baseline tầm thường trước khi tin mô hình phức tạp.
+      - name: finetune
+        summary: Trước hết trả lời "vì sao KHÔNG phải prompt/RAG"; dataset, eval trước-sau trên cùng tập giữ.
+      - name: benchmark
+        summary: Warmup, N lần chạy, báo phương sai chứ không chỉ trung bình, so sánh công bằng cùng phần cứng.
+
+  ops:
+    label: Vận hành
+    status: planned
+    suits: [api-service, crud-web-app, llm-app, data-pipeline]
+    skills:
+      - name: deploy-gate
+        summary: Cổng deploy chờ CI, đường lùi, và cách không để một job mới vô tình chặn production.
+      - name: incident
+        summary: 'Ghi sự cố không đổ lỗi: mốc thời gian, tác động đo được, nguyên nhân gốc, lưới canh sinh ra từ nó.'
+      - name: cost-guard
+        summary: Ngân sách phút CI và chi phí API; cảnh báo trước khi chạm trần, không phải sau.
+
+#: Gợi ý pack theo loại dự án — `scripts/packs.py --list` in ra để người chọn, không tự bật.
+project_types:
+  crud-web-app: [backend, frontend, data]
+  api-service: [backend, data, ops]
+  llm-app: [backend, ai-llm, ops]
+  ml-training: [data, ml-dl]
+  data-pipeline: [data, ops]
+  prototype: []
